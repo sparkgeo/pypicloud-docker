@@ -27,7 +27,7 @@ jobs:
 
       - name: Install pipenv
         run: |
-          python -m pip install --upgrade pipenv wheel
+          python -m pip install --upgrade pipenv wheel awscli
 
       - name: Cache Python Files
         id: cache
@@ -52,4 +52,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
         run: |
-          cd aws-cdk && pipenv run cdk deploy "*" --require-approval never
+          cd aws-cdk
+          aws sts get-caller-identity
+          pipenv run cdk deploy "*" --require-approval never

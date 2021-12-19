@@ -1,11 +1,12 @@
 from types import SimpleNamespace
-from aws_cdk import core, aws_s3 as s3, aws_iam as iam
+from constructs import Construct
+from aws_cdk import Stack, aws_s3 as s3, aws_iam as iam
 import os
 
 
-class SharedResourceStack(core.Stack):
+class SharedResourceStack(Stack):
     def __init__(
-        self, scope: core.Construct, id: str, config: SimpleNamespace, **kwargs
+        self, scope: Construct, id: str, **kwargs
     ) -> None:
         super().__init__(scope, id, **kwargs)
 
