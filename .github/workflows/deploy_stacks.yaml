@@ -33,13 +33,13 @@ jobs:
         id: cache
         uses: actions/cache@v2
         with:
-          path: iac/.venv
-          key: ${{ runner.os }}-v1-${{ hashFiles('iac/Pipfile.lock') }}
+          path: aws-cdk/.venv
+          key: ${{ runner.os }}-v1-${{ hashFiles('aws-cdk/Pipfile.lock') }}
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          cd iac && pipenv install && pipenv --venv
+          cd aws-cdk && pipenv install && pipenv --venv
 
       - name: Install CDK
         run: |
@@ -52,4 +52,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
         run: |
-          cd iac && pipenv run cdk deploy "*" --require-approval never
+          cd aws-cdk && pipenv run cdk deploy "*" --require-approval never
