@@ -8,7 +8,6 @@ on:
 env:
   CDK_VERSION: 2.2.0
   PIPENV_VENV_IN_PROJECT: "true"
-  CDK_DEFAULT_REGION: "us-west-2"
 
 jobs:
   deploy:
@@ -51,7 +50,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
-          AWS_REGION: us-west-2
+          CDK_DEFAULT_REGION: "us-west-2"
+          AWS_REGION: "us-west-2"
         run: |
           cd aws-cdk
           aws sts get-caller-identity
