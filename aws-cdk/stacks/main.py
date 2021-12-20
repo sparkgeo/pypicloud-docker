@@ -33,7 +33,7 @@ class MainStack(Stack):
                 vpc=vpc,
                 container_insights=True,
             ),
-            cpu=2,
+            cpu=2048,
             memory_limit_mib=4096,
             desired_count=1,
             protocol=elb.ApplicationProtocol.HTTPS,
