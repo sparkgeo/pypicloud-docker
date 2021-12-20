@@ -19,6 +19,8 @@ class MainStack(Stack):
         vpc = ec2.Vpc(
             self,
             "Vpc",
+            cidr="10.20.0.0/16",
+            max_azs=1
         )
 
         pypi = patterns.ApplicationLoadBalancedFargateService(
