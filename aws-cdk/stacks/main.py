@@ -1,7 +1,7 @@
 from constructs import Construct
 from aws_cdk import (
     Stack,
-    aws_batch as batch,
+    aws_certificatemanager as cert,
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_ecs_patterns as patterns,
@@ -16,12 +16,9 @@ class MainStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        vpc = ec2.Vpc(
-            self,
-            "Vpc",
-            cidr="10.20.0.0/16",
-            max_azs=1
-        )
+        vpc = ec2.Vpc(self, "Vpc", cidr="10.20.0.0/16", max_azs=1)
+
+        domain_name = "pypi.sparkge.dev"
 
         pypi = patterns.ApplicationLoadBalancedFargateService(
             self,
@@ -40,7 +37,13 @@ class MainStack(Stack):
             domain_zone=r53.HostedZone.from_lookup(
                 self, id="HostedZone", domain_name="sparkgeo.dev"
             ),
-            domain_name="pypi.sparkge.dev",
+            domain_name=domain_name,
+            certificate=cert.Certificate(
+                self,
+                "PyPiCert",
+                domain_name=domain_name,
+                validation=cert.CertificateValidation.from_dns(),
+            ),
             redirect_http=True,
             task_image_options=patterns.ApplicationLoadBalancedTaskImageOptions(
                 image=ecs.ContainerImage.from_asset("../py3-baseimage"),
@@ -64,7 +67,7 @@ class MainStack(Stack):
             "PyPifileSystem",
             vpc=vpc,
             performance_mode=efs.PerformanceMode.GENERAL_PURPOSE,
-            throughput_mode=efs.ThroughputMode.BURSTING
+            throughput_mode=efs.ThroughputMode.BURSTING,
         )
 
         accessPoint = file_system.add_access_point(
